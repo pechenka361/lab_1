@@ -1,11 +1,11 @@
+image: ubuntu2004
+
 build: off
 
-environment:
-  PYTHON: "3.9"
-
 install:
-  - python -m pip install --upgrade pip
+  - sudo apt-get update
+  - sudo apt-get install -y python3 python3-pip
   - pip3 install flask
 
 test_script:
-  - python ./flaskapp/some_app.py
+  - python3 ./flaskapp/some_app.py
