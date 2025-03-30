@@ -1,12 +1,11 @@
+build: off
+
 environment:
   PYTHON: "3.9"
 
 install:
-  - choco install python --version %PYTHON% --force
   - python -m pip install --upgrade pip
   - pip3 install flask
 
-build: off
-
 test_script:
-  - python3 ./flaskapp/some_app.py
+  - python ./flaskapp/some_app.py
