@@ -1,12 +1,10 @@
 import random
 import keras
-from keras.layer import Input
-from keras.models import Model
-from keras.application.resnet50 import preprocess_input, decode_predictions
+from keras import Input
+from keras import applications
 import os
 from PIL import Image
 import numpy as np
-from tensorflow.compat.v1 import ConfigProto, InteractiveSession
 
 height = 224
 width = 224
@@ -43,5 +41,5 @@ def getresult(image_box):
         image_resized[i] = np.array(image_box[i].resize((height, width)))
     image_resized = np.array(image_resized)
     out_net = resnet.predict(image_resized)
-    decode = decode_predictions(out_net, top=1)
+    decode = applications.resnet50.decode_predictions(out_net, top=1)
     return decode
