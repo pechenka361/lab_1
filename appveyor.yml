@@ -1,4 +1,4 @@
-image: ubuntu2404
+image: ubuntu2204
 
 install:
   - chmod +x ./flaskapp/st.sh
