@@ -1,15 +1,17 @@
 image: ubuntu2204
 
 install:
-  - sudo apt-get update
-  - sudo add-apt-repository ppa:deadsnakes/ppa -y
-  - sudo apt-get update
-  - sudo apt-get install -y python3.11 python3.11-distutils build-essential libssl-dev libffi-dev python3-dev
-  - curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
-  - python3.11 -m pip --version
-  - chmod +x ./flaskapp/st.sh
-  - python3.11 -m pip install -r ./flaskapp/requirements.txt --no-cache-dir
+  - apt-get update || { echo "Failed to update packages"; exit 1; }
+  - add-apt-repository ppa:deadsnakes/ppa -y || { echo "Failed to add PPA"; exit 1; }
+  - apt-get update || { echo "Failed to update packages"; exit 1; }
+  - apt-get install -y python3.11 python3.11-distutils build-essential libssl-dev libffi-dev python3-dev || { echo "Failed to install dependencies"; exit 1; }
+  - curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11 || { echo "Failed to install pip"; exit 1; }
+  - python3.11 -m pip --version || { echo "Pip is not installed correctly"; exit 1; }
+  - chmod +x ./flaskapp/st.sh || { echo "Failed to make st.sh executable"; exit 1; }
+  - python3.11 -m pip install -r ./flaskapp/requirements.txt --no-cache-dir || { echo "Failed to install requirements"; exit 1; }
 
 test_script:
-  - cd flaskapp
-  - ./st.sh
+  - echo "Changing directory to flaskapp"
+  - cd flaskapp || { echo "Failed to change directory"; exit 1; }
+  - echo "Running st.sh"
+  - ./st.sh || { echo "Failed to execute st.sh"; exit 1; }
