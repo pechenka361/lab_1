@@ -4,10 +4,11 @@ install:
   - sudo apt-get update
   - sudo add-apt-repository ppa:deadsnakes/ppa -y
   - sudo apt-get update
-  - sudo apt-get install -y python3.11 python3.11-distutils
+  - sudo apt-get install -y python3.11 python3.11-distutils build-essential libssl-dev libffi-dev python3-dev
   - curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
+  - python3.11 -m pip --version
   - chmod +x ./flaskapp/st.sh
-  - python3.11 -m pip install -r ./flaskapp/requirements.txt
+  - python3.11 -m pip install -r ./flaskapp/requirements.txt --no-cache-dir
 
 test_script:
   - cd flaskapp
