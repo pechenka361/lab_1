@@ -3,7 +3,7 @@ image: ubuntu2204
 install:
   # Обновление системы и установка Python 3.11
   - sudo apt-get update
-  - sudo apt-get install -y python3.11 python3.11-distutils
+  - sudo apt-get install -y python3.11 python3.11-distutils python3.11-venv
   - wget https://bootstrap.pypa.io/get-pip.py
   - sudo python3.11 get-pip.py
 
