@@ -1,13 +1,9 @@
-image: ubuntu2004
+image: ubuntu2404
 
 install:
   - chmod +x ./flaskapp/st.sh
   - sudo apt-get update
-  - sudo add-apt-repository ppa:deadsnakes/ppa
-  - sudo apt update
-  - sudo apt install python3.11-venv python3.11-distutils
-  - curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
-  - sudo apt-get install python3-pip
+  - sudo apt-get install -y python3.11 python3.11-pip
   - pip3 install -r ./flaskapp/requirements.txt
 
 test_script:
