@@ -14,7 +14,7 @@ install:
   # Обновление pip и установка зависимостей
   - pip install --upgrade pip
   - chmod +x ./flaskapp/st.sh
-  - pip install -r crequirements.txt
+  - pip install -r requirements.txt
 
   # Установка Node.js (для Vercel CLI)
   - curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
