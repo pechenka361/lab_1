@@ -32,4 +32,4 @@ test_script:
 deploy_script:
   # Деплой приложения на Vercel
   - cd ..
-  - vercel --prod --token Wk0rCZqv4z1ojyxQfaRnBdwE
+  - vercel --prod --token Wk0rCZqv4z1ojyxQfaRnBdwE --yes
