@@ -30,9 +30,6 @@ test_script:
   - ./st.sh
 
 deploy_script:
-  # Логин в Vercel с использованием токена API
-  - vercel login --token Wk0rCZqv4z1ojyxQfaRnBdwE
-
   # Деплой приложения на Vercel
   - cd ..
   - vercel --prod --token Wk0rCZqv4z1ojyxQfaRnBdwE
