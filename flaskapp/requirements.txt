@@ -4,5 +4,6 @@ requests
 flask-bootstrap
 flask-wtf
 pillow
+tensorflow
 keras
 lxml
