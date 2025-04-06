@@ -1,15 +1,21 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "flaskapp/some_app.py",
-        "use": "@vercel/python"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "flaskapp/some_app.py"
-      }
-    ]
-  }
+  "version": 2,
+  "build": {
+    "env": {
+      "PYTHON_VERSION": "3.11",
+      "PIP_COMMAND": "pip"
+    }
+  },
+  "builds": [
+    {
+      "src": "flaskapp/some_app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "flaskapp/some_app.py"
+    }
+  ]
+}

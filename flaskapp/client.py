@@ -1,6 +1,5 @@
 import requests
 import os
-from io import BytesIO
 import base64
 
 img_data = None
