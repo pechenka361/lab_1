@@ -11,16 +11,16 @@
                         <xsl:for-each select="people/man">
                             <tr>
                                 <th>
-                                    <xsl:value-of select="@id">
+                                    <xsl:value-of select="@id"/>
                                 </th>
                                 <th>
-                                    <xsl:value-of select="name">
+                                    <xsl:value-of select="name"/>
                                 </th>
                                 <th>
-                                    <xsl:value-of select="age">
+                                    <xsl:value-of select="age"/>
                                 </th>
                                 <th>
-                                    <xsl:value-of select="work">
+                                    <xsl:value-of select="work"/>
                                 </th>
                             </tr>
                         </xsl:for-each>
