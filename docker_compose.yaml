@@ -1,0 +1,11 @@
+services:
+  api:
+    restart: always
+    build:
+      context: "./flaskapp"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 5000:5000
