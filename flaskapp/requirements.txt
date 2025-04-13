@@ -7,3 +7,4 @@ pillow
 tensorflow
 keras
 lxml
+opencv-python
