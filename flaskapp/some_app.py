@@ -47,7 +47,7 @@ class NetForm(FlaskForm):
         "Load image",
         validators=[
             FileRequired(),
-            FileAllowed(["jpg", "png", "jpeg"], "Image only!0"),
+            FileAllowed(["jpg", "png"], "Image only!0"),
         ],
     )
     recaptcha = RecaptchaField()
