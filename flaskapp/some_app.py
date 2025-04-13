@@ -46,8 +46,8 @@ class NetForm(FlaskForm):
     upload = FileField(
         "Load image",
         validators=[
-            FileRequired(),
-            FileAllowed(["jpg"], "Image only!0"),
+            FileRequired()
+            FileAllowed(["jpg", "png", "jpeg"], "Image only!0"),
         ],
     )
     recaptcha = RecaptchaField()
