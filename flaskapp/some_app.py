@@ -116,7 +116,7 @@ def image_resize():
 
     if form.validate_on_submit():
         # Проверка наличия директории ./static
-        upload_folder = app.config['UPLOAD_FOLDER']
+        upload_folder = "./static"
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)  # Создаем директорию, если её нет
 
