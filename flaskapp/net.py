@@ -23,7 +23,7 @@ resnet = keras.applications.resnet_v2.ResNet50V2(
 )
 
 
-def reed_image_file(files_max_count, dir_name):
+def read_image_file(files_max_count, dir_name):
     files = [item.name for item in os.scandir(dir_name) if item.is_file()]
     files_count = files_max_count
     if files_max_count > len(files):
