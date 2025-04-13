@@ -1,21 +1,52 @@
-<form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.upload.label }}<br>
-        {{ form.upload }}
-        {% for error in form.upload.errors %}
-            <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-    </div>
-    <button type="submit">Загрузить</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка изображения</title>
+    <style>
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .warning {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <h1>Загрузите изображение</h1>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <ul>
-            {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
+    <!-- Отображение сообщений flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Форма загрузки -->
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.upload.label }}<br>
+            {{ form.upload }}
+            {% for error in form.upload.errors %}
+                <span class="error">{{ error }}</span><br>
             {% endfor %}
-        </ul>
+        </div>
+        <button type="submit">Загрузить</button>
+    </form>
+
+    <!-- Отображение загруженного изображения -->
+    {% if image_name %}
+        <h2>Загруженное изображение:</h2>
+        <img src="{{ url_for('static', filename=image_name) }}" alt="Uploaded Image" style="max-width: 500px;">
     {% endif %}
-{% endwith %}
+</body>
+</html>

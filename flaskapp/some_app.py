@@ -101,24 +101,22 @@ def apixml():
 
 class ResizeForm(FlaskForm):
     upload = FileField(
-        "Load image",
+        "Загрузите изображение",
         validators=[
-            FileRequired(),
-            FileAllowed(["jpg", "png", "jpeg"], "Image only!0"),
+            FileRequired(message="Файл обязателен!"),
+            FileAllowed(["jpg", "png", "jpeg", "gif"], message="Разрешены только изображения (JPG, PNG, JPEG, GIF)!"),
         ],
     )
-    recaptcha = RecaptchaField()
-    submit = SubmitField("send")
+    submit = SubmitField("Загрузить")
 
 @app.route("/image_resize", methods=['GET', 'POST'])
-
 def image_resize():
     form = ResizeForm()
     filename = None
 
     if form.validate_on_submit():
         # Проверка наличия директории ./static
-        upload_folder = "./static"
+        upload_folder = app.config['UPLOAD_FOLDER']
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)  # Создаем директорию, если её нет
 
@@ -130,21 +128,18 @@ def image_resize():
             file_extension = uploaded_file.filename.rsplit('.', 1)[-1].lower()
             if file_extension not in allowed_extensions:
                 flash("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
-                print("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
                 return render_template("resize.html", form=form, image_name=filename)
 
             # Сохранение файла
             try:
-                filename = os.path.join(upload_folder, secure_filename(uploaded_file.filename))
-                uploaded_file.save(filename)
+                filename = secure_filename(uploaded_file.filename)
+                file_path = os.path.join(upload_folder, filename)
+                uploaded_file.save(file_path)
                 flash("Файл успешно загружен.", "success")
-                print("Файл успешно загружен.", "success")
             except Exception as e:
                 flash(f"Ошибка при сохранении файла: {e}", "danger")
-                print(f"Ошибка при сохранении файла: {e}", "danger")
         else:
             flash("Файл не был загружен.", "warning")
-            print("Файл не был загружен.", "warning")
 
     return render_template("resize.html", form=form, image_name=filename)
 
