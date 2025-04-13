@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, flash
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
@@ -98,6 +98,51 @@ def apixml():
     newhtml = transform(dom)
     strfile = ET.tostring(newhtml)
     return strfile
+
+class ResizeForm():
+    upload = FileField(
+        "Load image",
+        validators=[
+            FileRequired(),
+            FileAllowed(["jpg", "png", "jpeg"], "Image only!0"),
+        ],
+    )
+    recaptcha = RecaptchaField()
+    submit = SubmitField("send")
+
+@app.route("/image_resize", methods=['GET', 'POST'])
+
+def image_resize():
+    form = ResizeForm()
+    filename = None
+
+    if form.validate_on_submit():
+        # Проверка наличия директории ./static
+        upload_folder = "./static"
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)  # Создаем директорию, если её нет
+
+        # Получение файла из формы
+        uploaded_file = form.upload.data
+        if uploaded_file:
+            # Проверка расширения файла
+            allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+            file_extension = uploaded_file.filename.rsplit('.', 1)[-1].lower()
+            if file_extension not in allowed_extensions:
+                flash("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
+                return render_template("resize.html", form=form, image_name=filename)
+
+            # Сохранение файла
+            try:
+                filename = os.path.join(upload_folder, secure_filename(uploaded_file.filename))
+                uploaded_file.save(filename)
+                flash("Файл успешно загружен.", "success")
+            except Exception as e:
+                flash(f"Ошибка при сохранении файла: {e}", "danger")
+        else:
+            flash("Файл не был загружен.", "warning")
+
+    return render_template("resize.html", form=form, image_name=filename)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
