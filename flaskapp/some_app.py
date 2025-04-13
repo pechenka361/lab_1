@@ -20,8 +20,8 @@ bootstrap = Bootstrap(app)
 SECRET_KEY = "d090728025bb514707d794d4d2aeffd9"
 app.config["SECRET_KEY"] = SECRET_KEY
 app.config["RECAPTCHA_USE_SSL"] = False
-app.config["RECAPTCHA_PUBLIC_KEY"] = "6Lf7AgsrAAAAAG3TzGdRTZcvHFLe-0s0CTr8yZ3I"
-app.config["RECAPTCHA_PRIVATE_KEY"] = "6Lf7AgsrAAAAACxZ54pwF65zESl6vYnY-GtM2021"
+app.config["RECAPTCHA_PUBLIC_KEY"] = "6LdEcBYrAAAAAH3o_kMpRMuSeJD5pvMUVGJ6ojw7"
+app.config["RECAPTCHA_PRIVATE_KEY"] = "6LdEcBYrAAAAAC97LUi7cPMPV8v4EUo7N-78QQBA"
 app.config["RECAPTCHA_OPTIONS"] = {"theme": "white"}
 
 
