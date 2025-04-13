@@ -130,6 +130,7 @@ def image_resize():
             file_extension = uploaded_file.filename.rsplit('.', 1)[-1].lower()
             if file_extension not in allowed_extensions:
                 flash("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
+                print("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
                 return render_template("resize.html", form=form, image_name=filename)
 
             # Сохранение файла
@@ -137,10 +138,13 @@ def image_resize():
                 filename = os.path.join(upload_folder, secure_filename(uploaded_file.filename))
                 uploaded_file.save(filename)
                 flash("Файл успешно загружен.", "success")
+                print("Файл успешно загружен.", "success")
             except Exception as e:
                 flash(f"Ошибка при сохранении файла: {e}", "danger")
+                print(f"Ошибка при сохранении файла: {e}", "danger")
         else:
             flash("Файл не был загружен.", "warning")
+            print("Файл не был загружен.", "warning")
 
     return render_template("resize.html", form=form, image_name=filename)
 
