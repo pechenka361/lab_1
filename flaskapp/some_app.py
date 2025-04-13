@@ -99,7 +99,7 @@ def apixml():
     strfile = ET.tostring(newhtml)
     return strfile
 
-class ResizeForm():
+class ResizeForm(FlaskForm):
     upload = FileField(
         "Load image",
         validators=[
