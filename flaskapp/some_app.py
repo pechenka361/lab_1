@@ -46,7 +46,7 @@ class NetForm(FlaskForm):
     upload = FileField(
         "Load image",
         validators=[
-            FileRequired(),
+            FileRequired()
             FileAllowed(["jpg", "png", "jpeg"], "Image only!0"),
         ],
     )
