@@ -177,7 +177,7 @@ def image_resize():
 
                 name, ext = os.path.splitext(filename)
                 resized_filename = f"{name}_resized{ext}"
-                resize_path = os.path.join(upload_folder, resize_filename)
+                resize_path = os.path.join(upload_folder, resized_filename)
 
                 resize_image(
                     image_path=original_path,
