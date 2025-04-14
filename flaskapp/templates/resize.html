@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузка изображения</title>
+    <title>Загрузка и изменение изображения</title>
     <style>
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-        .warning {
-            color: orange;
-        }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        img { max-width: 500px; margin-top: 10px; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <h1>Загрузите изображение</h1>
+    <h1>Загрузите и измените изображение</h1>
 
     <!-- Отображение сообщений flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -31,7 +27,7 @@
     {% endwith %}
 
     <!-- Форма загрузки -->
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" id="resize-form">
         {{ form.hidden_tag() }}
         <div>
             {{ form.upload.label }}<br>
@@ -40,13 +36,83 @@
                 <span class="error">{{ error }}</span><br>
             {% endfor %}
         </div>
+
+        <div>
+            <label>Выберите режим изменения размера:</label><br>
+            <input type="radio" name="resize_mode" value="percent" id="mode-percent" checked> Проценты
+            <input type="radio" name="resize_mode" value="pixels" id="mode-pixels"> Пиксели
+        </div>
+
+        <div id="percent-fields" class="resize-fields">
+            {{ form.percent.label }}<br>
+            {{ form.percent }}
+            {% for error in form.percent.errors %}
+                <span class="error">{{ error }}</span><br>
+            {% endfor %}
+        </div>
+
+        <div id="pixel-fields" class="resize-fields hidden">
+            {{ form.width.label }}<br>
+            {{ form.width }}
+            {% for error in form.width.errors %}
+                <span class="error">{{ error }}</span><br>
+            {% endfor %}
+
+            {{ form.height.label }}<br>
+            {{ form.height }}
+            {% for error in form.height.errors %}
+                <span class="error">{{ error }}</span><br>
+            {% endfor %}
+
+            <label>
+                <input type="checkbox" name="keep_aspect_ratio" id="keep-aspect-ratio"> Сохранить пропорции
+            </label>
+        </div>
+
         <button type="submit">Загрузить</button>
     </form>
 
-    <!-- Отображение загруженного изображения -->
-    {% if image_name %}
-        <h2>Загруженное изображение:</h2>
-        <img src="{{ url_for('static', filename=image_name) }}" alt="Uploaded Image" style="max-width: 500px;">
+    <!-- Отображение оригинального изображения -->
+    {% if original_image %}
+        <h2>Оригинальное изображение:</h2>
+        <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
     {% endif %}
+
+    <!-- Отображение измененного изображения -->
+    {% if resized_image %}
+        <h2>Измененное изображение:</h2>
+        <img src="{{ url_for('static', filename=resized_image) }}" alt="Resized Image">
+    {% endif %}
+
+    <script>
+        // Переключение между режимами
+        const modePercent = document.getElementById("mode-percent");
+        const modePixels = document.getElementById("mode-pixels");
+        const percentFields = document.getElementById("percent-fields");
+        const pixelFields = document.getElementById("pixel-fields");
+
+        modePercent.addEventListener("change", () => {
+            percentFields.classList.remove("hidden");
+            pixelFields.classList.add("hidden");
+        });
+
+        modePixels.addEventListener("change", () => {
+            percentFields.classList.add("hidden");
+            pixelFields.classList.remove("hidden");
+        });
+
+        // Блокировка второго поля при сохранении пропорций
+        const keepAspectRatio = document.getElementById("keep-aspect-ratio");
+        const widthField = document.querySelector("input[name='width']");
+        const heightField = document.querySelector("input[name='height']");
+
+        keepAspectRatio.addEventListener("change", () => {
+            if (keepAspectRatio.checked) {
+                heightField.disabled = true;
+            } else {
+                heightField.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
