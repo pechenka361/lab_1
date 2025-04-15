@@ -171,11 +171,11 @@ def image_resize():
                 # Сохраняем графики распределения цветов
                 original_histogram_name = f"{name}_histogram_original.png"
                 original_histogram_path = os.path.join(upload_folder, original_histogram_name)
-                image_operation.plot_color_distribution(original_path, original_histogram_path)
+                image_operation.plot_color_images(original_path, original_histogram_path)
 
                 resized_histogram_name = f"{name}_histogram_resized.png"
                 resized_histogram_path = os.path.join(upload_folder, resized_histogram_name)
-                image_operation.plot_color_distribution(resized_path, resized_histogram_path)
+                image_operation.plot_color_images(resized_path, resized_histogram_path)
 
                 flash("Изображение успешно изменено.", "success")
 
