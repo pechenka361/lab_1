@@ -11,6 +11,8 @@ from PIL import Image
 from io import BytesIO
 import json
 import lxml.etree as ET
+import matplotlib.pyplot as plt
+import numpy as np
 
 import net as neuronet
 
@@ -146,11 +148,39 @@ def resize_image(image_path, output_path, mode, percent=None, width=None, height
         resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
         resized_img.save(output_path)
 
+def plot_color_images(image_path, output_path):
+    img = Image.open(image_path)
+    img_array = np.array(img)
+
+    r, g, b = img_array[:, :, 0], img_array[:, :, 1], img_array[:, :, 2]
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 3, 1)
+    plt.hist(r.ravel(), bins=256, color='red')
+    plt.title('Red chanel')
+    plt.xlim([0, 256])
+
+    plt.subplot(1, 3, 2)
+    plt.hist(r.ravel(), bins=256, color='green')
+    plt.title('Green chanel')
+    plt.xlim([0, 256])
+
+    plt.subplot(1, 3, 3)
+    plt.hist(r.ravel(), bins=256, color='blue')
+    plt.title('Blue chanel')
+    plt.xlim([0, 256])
+    
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
 @app.route("/image_resize", methods=['GET', 'POST'])
 def image_resize():
     form = ResizeForm()
     filename = None
     resized_filename = None
+    original_histogram = None
+    resized_histogram = None
 
     if form.validate_on_submit():
         upload_folder = "./static"
@@ -170,6 +200,7 @@ def image_resize():
                 filename = secure_filename(uploaded_file.filename)
                 original_path = os.path.join(upload_folder, filename)
                 uploaded_file.save(original_path)
+
                 mode = request.form.get("resize_mode")
                 percent = form.percent.data
                 width = form.width.data
@@ -189,13 +220,27 @@ def image_resize():
                     height=height,
                     keep_aspect_ratio=keep_aspect_ratio
                 )
+
+                original_histogram_name = f"{name}_histogram_original.png"
+                original_histogram_path = os.path.join(upload_folder, original_histogram_name)
+                plot_color_images(original_path, original_histogram_path)
+
+                resized_histogram_name = f"{name}_histogram_resized.png"
+                resized_histogram_path = os.path.join(upload_folder, resized_histogram_name)
+                plot_color_images(resize_path, resized_histogram_path)
+
                 flash("Изображение успешно изменено.", "success")
+
+                original_image = filename
+                resized_image = resized_filename
+                original_histogram = original_histogram_name
+                resized_histogram = resized_histogram_name
             except Exception as e:
                 flash(f"Ошибка при изменении изображения: {e}", "danger")
         else:
             flash("Файл не был загружен.", "warning")
 
-    return render_template("resize.html", form=form, image_name=filename)
+    return render_template("resize.html", form=form, original_image = original_image, resized_image = resized_image, original_histogram = original_histogram, resized_histogram = resized_histogram)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)

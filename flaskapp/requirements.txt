@@ -8,3 +8,4 @@ tensorflow
 keras
 lxml
 opencv-python
+matplotlib
