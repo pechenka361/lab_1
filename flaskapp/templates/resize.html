@@ -77,7 +77,7 @@
         <h2>Оригинальное изображение:</h2>
         <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
 
-        <h2>Гистограмма распределения цветов (исходное изображение):</h2>
+        <h2>График распределения цветов (исходное изображение):</h2>
         <img src="{{ url_for('static', filename=original_histogram) }}" alt="Original Histogram">
     {% endif %}
 
@@ -86,7 +86,7 @@
         <h2>Измененное изображение:</h2>
         <img src="{{ url_for('static', filename=resized_image) }}" alt="Resized Image">
 
-        <h2>Гистограмма распределения цветов (измененное изображение):</h2>
+        <h2>График распределения цветов (измененное изображение):</h2>
         <img src="{{ url_for('static', filename=resized_histogram) }}" alt="Resized Histogram">
     {% endif %}
 
