@@ -143,7 +143,7 @@ def resize_image(image_path, output_path, mode, percent=None, width=None, height
             raise ValueError("Неверный режим изменения размера")
         
         resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        resize_image.save(output_path)
+        resized_img.save(output_path)
 
 @app.route("/image_resize", methods=['GET', 'POST'])
 def image_resize():
