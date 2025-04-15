@@ -131,10 +131,7 @@ def resize_image(image_path, output_path, mode, percent=None, width=None, height
         elif mode == "pixels":
             if keep_aspect_ratio:
                 aspect_ratio = img.width/img.height
-                if width / height > aspect_ratio:
-                    new_width = int(height*aspect_ratio)
-                else:
-                    new_height = int(width/aspect_ratio)
+                new_width = int(height*aspect_ratio)
             else:
                 if width is None or height is None:
                     raise ValueError("Необходимо указать ширину и высоту для изменения размера")
