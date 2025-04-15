@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response, flash
+from flask import Flask, render_template, request, Response, flash, send_from_directory, redirect, url_for
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Optional, NumberRange
@@ -41,6 +41,26 @@ def data_to():
         "simple.html", some_str=some_str, some_value=some_value, some_pars=some_pars
     )
 
+@app.route('/download/<filename>')
+def download_file(filename):
+    """
+    Маршрут для скачивания файла.
+    :param filename: Имя файла для скачивания.
+    """
+    # Путь к папке с файлами
+    upload_folder = app.config['UPLOAD_FOLDER']
+    
+    # Проверяем, существует ли файл
+    if not os.path.exists(os.path.join(upload_folder, filename)):
+        flash("Файл не найден.", "danger")
+        return redirect(url_for('image_resize'))
+    
+    # Отправляем файл для скачивания
+    return send_from_directory(
+        directory=upload_folder,
+        path=filename,
+        as_attachment=True  # Файл будет скачиваться, а не отображаться в браузере
+    )
 
 class NetForm(FlaskForm):
     openid = StringField("openid", validators=[DataRequired()])
