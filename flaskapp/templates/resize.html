@@ -75,25 +75,25 @@
     <!-- Отображение оригинального изображения -->
     {% if original_image %}
     <h2>Оригинальное изображение:</h2>
-    <img src="{{ url_for('static', filename=original_image) }}?{{ file_timestamp(original_image) }}" alt="Original Image">
+    <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
     {% endif %}
 
     <!-- Отображение измененного изображения -->
     {% if resized_image %}
     <h2>Измененное изображение:</h2>
-    <img src="{{ url_for('static', filename=resized_image) }}?{{ file_timestamp(resized_image) }}" alt="Resized Image">
+    <img src="{{ url_for('static', filename=resized_image) }}" alt="Resized Image">
     {% endif %}
 
     <!-- Отображение гистограммы исходного изображения -->
     {% if original_histogram %}
     <h2>Гистограмма распределения цветов (исходное изображение):</h2>
-    <img src="{{ url_for('static', filename=original_histogram) }}?{{ file_timestamp(original_histogram) }}" alt="Original Histogram">
+    <img src="{{ url_for('static', filename=original_histogram) }}" alt="Original Histogram">
     {% endif %}
 
     <!-- Отображение гистограммы измененного изображения -->
     {% if resized_histogram %}
     <h2>Гистограмма распределения цветов (измененное изображение):</h2>
-    <img src="{{ url_for('static', filename=resized_histogram) }}?{{ file_timestamp(resized_histogram) }}" alt="Resized Histogram">
+    <img src="{{ url_for('static', filename=resized_histogram) }}" alt="Resized Histogram">
     {% endif %}
 
     <script>
