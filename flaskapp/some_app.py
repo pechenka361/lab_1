@@ -188,6 +188,19 @@ def image_resize():
         else:
             flash("Файл не был загружен.", "warning")
 
+     # Проверка существования файлов перед передачей в шаблон
+    if original_image and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], original_image)):
+        original_image = None
+
+    if resized_image and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], resized_image)):
+        resized_image = None
+
+    if original_histogram and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], original_histogram)):
+        original_histogram = None
+
+    if resized_histogram and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], resized_histogram)):
+        resized_histogram = None
+
     return render_template("resize.html", form=form, original_image = original_image, resized_image = resized_image, original_histogram = original_histogram, resized_histogram = resized_histogram)
 
 if __name__ == "__main__":
