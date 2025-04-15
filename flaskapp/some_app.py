@@ -149,7 +149,7 @@ def resize_image(image_path, output_path, mode, percent=None, width=None, height
 def image_resize():
     form = ResizeForm()
     filename = None
-    resize_filename = None
+    resized_filename = None
 
     if form.validate_on_submit():
         upload_folder = "./static"
