@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, Response, flash
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import StringField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Optional, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_bootstrap import Bootstrap
@@ -11,10 +11,9 @@ from PIL import Image
 from io import BytesIO
 import json
 import lxml.etree as ET
-import matplotlib.pyplot as plt
-import numpy as np
 
 import net as neuronet
+import image_operation
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -123,57 +122,6 @@ class ResizeForm(FlaskForm):
     )
     submit = SubmitField("Загрузить")
 
-def resize_image(image_path, output_path, mode, percent=None, width=None, height=None, keep_aspect_ratio=True):
-    with Image.open(image_path) as img: 
-        if mode == "percent":
-            if percent is None:
-                raise ValueError("необходимо указать процент для изменения размера")
-            new_width = int(img.width*percent / 100)
-            new_height = int(img.height*percent / 100)
-        elif mode == "pixels":
-            if keep_aspect_ratio:
-                aspect_ratio = img.width/img.height
-                new_height = int(width/aspect_ratio)
-                new_width = int(width)
-            else:
-                if width is None or height is None:
-                    raise ValueError("Необходимо указать ширину и высоту для изменения размера")
-                else:
-                    new_width = width
-                    new_height = height
-
-        else: 
-            raise ValueError("Неверный режим изменения размера")
-        
-        resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        resized_img.save(output_path)
-
-def plot_color_images(image_path, output_path):
-    img = Image.open(image_path)
-    img_array = np.array(img)
-
-    r, g, b = img_array[:, :, 0], img_array[:, :, 1], img_array[:, :, 2]
-
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 3, 1)
-    plt.hist(r.ravel(), bins=256, color='red')
-    plt.title('Red chanel')
-    plt.xlim([0, 256])
-
-    plt.subplot(1, 3, 2)
-    plt.hist(r.ravel(), bins=256, color='green')
-    plt.title('Green chanel')
-    plt.xlim([0, 256])
-
-    plt.subplot(1, 3, 3)
-    plt.hist(r.ravel(), bins=256, color='blue')
-    plt.title('Blue chanel')
-    plt.xlim([0, 256])
-    
-    plt.tight_layout()
-    plt.savefig(output_path)
-    plt.close()
-
 @app.route("/image_resize", methods=['GET', 'POST'])
 def image_resize():
     form = ResizeForm()
@@ -211,7 +159,7 @@ def image_resize():
                 resized_filename = f"{name}_resized{ext}"
                 resize_path = os.path.join(upload_folder, resized_filename)
 
-                resize_image(
+                image_operation.resize_image(
                     image_path=original_path,
                     output_path=resize_path,
                     mode=mode,
@@ -223,11 +171,11 @@ def image_resize():
 
                 original_histogram_name = f"{name}_histogram_original.png"
                 original_histogram_path = os.path.join(upload_folder, original_histogram_name)
-                plot_color_images(original_path, original_histogram_path)
+                image_operation.plot_color_images(original_path, original_histogram_path)
 
                 resized_histogram_name = f"{name}_histogram_resized.png"
                 resized_histogram_path = os.path.join(upload_folder, resized_histogram_name)
-                plot_color_images(resize_path, resized_histogram_path)
+                image_operation.plot_color_images(resize_path, resized_histogram_path)
 
                 flash("Изображение успешно изменено.", "success")
 
@@ -239,6 +187,19 @@ def image_resize():
                 flash(f"Ошибка при изменении изображения: {e}", "danger")
         else:
             flash("Файл не был загружен.", "warning")
+
+     # Проверка существования файлов перед передачей в шаблон
+    if original_image and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], original_image)):
+        original_image = None
+
+    if resized_image and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], resized_image)):
+        resized_image = None
+
+    if original_histogram and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], original_histogram)):
+        original_histogram = None
+
+    if resized_histogram and not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], resized_histogram)):
+        resized_histogram = None
 
     return render_template("resize.html", form=form, original_image = original_image, resized_image = resized_image, original_histogram = original_histogram, resized_histogram = resized_histogram)
 
