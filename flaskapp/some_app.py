@@ -48,7 +48,7 @@ def download_file(filename):
     :param filename: Имя файла для скачивания.
     """
     # Путь к папке с файлами
-    upload_folder = app.config['UPLOAD_FOLDER']
+    upload_folder = "./static"
     
     # Проверяем, существует ли файл
     if not os.path.exists(os.path.join(upload_folder, filename)):
