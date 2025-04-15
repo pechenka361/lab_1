@@ -52,17 +52,21 @@
         </div>
 
         <div id="pixel-fields" class="resize-fields hidden">
-            {{ form.width.label }}<br>
-            {{ form.width }}
-            {% for error in form.width.errors %}
-                <span class="error">{{ error }}</span><br>
-            {% endfor %}
+            <div class="input-group">
+                {{ form.width.label(class="input-label") }}
+                {{ form.width(class="input-field") }}
+                {% for error in form.width.errors %}
+                    <span class="error">{{ error }}</span><br>
+                {% endfor %}
+            </div>
 
-            {{ form.height.label }}<br>
-            {{ form.height }}
-            {% for error in form.height.errors %}
-                <span class="error">{{ error }}</span><br>
-            {% endfor %}
+            <div class="input-group">
+                {{ form.height.label(class="input-label") }}
+                {{ form.height(class="input-field") }}
+                {% for error in form.height.errors %}
+                    <span class="error">{{ error }}</span><br>
+                {% endfor %}
+            </div>
 
             <label>
                 <input type="checkbox" name="keep_aspect_ratio" id="keep-aspect-ratio"> Сохранить пропорции
