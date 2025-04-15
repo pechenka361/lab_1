@@ -125,8 +125,10 @@ class ResizeForm(FlaskForm):
 @app.route("/image_resize", methods=['GET', 'POST'])
 def image_resize():
     form = ResizeForm()
-    filename = None
-    resized_filename = None
+
+    # Инициализация переменных
+    original_image = None
+    resized_image = None
     original_histogram = None
     resized_histogram = None
 
@@ -137,31 +139,28 @@ def image_resize():
 
         uploaded_file = form.upload.data
         if uploaded_file:
-            allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-            file_extension = uploaded_file.filename.rsplit('.', 1)[-1].lower()
-            if file_extension not in allowed_extensions:
-                flash("Недопустимый формат файла. Разрешены только PNG, JPG, JPEG, GIF.", "danger")
-                return render_template("resize.html", form=form, image_name=filename)
-
-            # Сохранение файла
             try:
-                filename = secure_filename(uploaded_file.filename)
-                original_path = os.path.join(upload_folder, filename)
+                # Сохраняем оригинальный файл
+                original_filename = secure_filename(uploaded_file.filename)
+                original_path = os.path.join(upload_folder, original_filename)
                 uploaded_file.save(original_path)
 
+                # Определяем режим изменения размера
                 mode = request.form.get("resize_mode")
                 percent = form.percent.data
                 width = form.width.data
                 height = form.height.data
                 keep_aspect_ratio = request.form.get("keep_aspect_ratio") == "on"
 
-                name, ext = os.path.splitext(filename)
+                # Генерируем имя для измененного файла
+                name, ext = os.path.splitext(original_filename)
                 resized_filename = f"{name}_resized{ext}"
-                resize_path = os.path.join(upload_folder, resized_filename)
+                resized_path = os.path.join(upload_folder, resized_filename)
 
+                # Изменяем размер изображения
                 image_operation.resize_image(
                     image_path=original_path,
-                    output_path=resize_path,
+                    output_path=resized_path,
                     mode=mode,
                     percent=percent,
                     width=width,
@@ -169,39 +168,57 @@ def image_resize():
                     keep_aspect_ratio=keep_aspect_ratio
                 )
 
+                # Сохраняем графики распределения цветов
                 original_histogram_name = f"{name}_histogram_original.png"
                 original_histogram_path = os.path.join(upload_folder, original_histogram_name)
-                image_operation.plot_color_images(original_path, original_histogram_path)
+                image_operation.plot_color_distribution(original_path, original_histogram_path)
 
                 resized_histogram_name = f"{name}_histogram_resized.png"
                 resized_histogram_path = os.path.join(upload_folder, resized_histogram_name)
-                image_operation.plot_color_images(resize_path, resized_histogram_path)
+                image_operation.plot_color_distribution(resized_path, resized_histogram_path)
 
                 flash("Изображение успешно изменено.", "success")
 
-                original_image = filename
+                # Обновляем переменные для отображения
+                original_image = original_filename
                 resized_image = resized_filename
                 original_histogram = original_histogram_name
                 resized_histogram = resized_histogram_name
+
             except Exception as e:
                 flash(f"Ошибка при изменении изображения: {e}", "danger")
         else:
             flash("Файл не был загружен.", "warning")
 
-     # Проверка существования файлов перед передачей в шаблон
-    if not os.path.exists(os.path.join("./static", original_image)):
+    # Проверка существования файлов перед передачей в шаблон
+    if original_image and os.path.exists(os.path.join("./static", original_image)):
+        original_image = original_image
+    else:
         original_image = None
 
-    if not os.path.exists(os.path.join("./static", resized_image)):
+    if resized_image and os.path.exists(os.path.join("./static", resized_image)):
+        resized_image = resized_image
+    else:
         resized_image = None
 
-    if not os.path.exists(os.path.join("./static", original_histogram)):
+    if original_histogram and os.path.exists(os.path.join("./static", original_histogram)):
+        original_histogram = original_histogram
+    else:
         original_histogram = None
 
-    if not os.path.exists(os.path.join("./static", resized_histogram)):
+    if resized_histogram and os.path.exists(os.path.join("./static", resized_histogram)):
+        resized_histogram = resized_histogram
+    else:
         resized_histogram = None
 
-    return render_template("resize.html", form=form, original_image = original_image, resized_image = resized_image, original_histogram = original_histogram, resized_histogram = resized_histogram)
+    return render_template(
+        "resize.html",
+        form=form,
+        original_image=original_image,
+        resized_image=resized_image,
+        original_histogram=original_histogram,
+        resized_histogram=resized_histogram
+    )
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
