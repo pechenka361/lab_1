@@ -4,7 +4,7 @@ requests
 flask-bootstrap
 flask-wtf
 pillow
-tensorboard==2.19.0
+tensorflow==2.19.0
 keras
 lxml
 opencv-python
