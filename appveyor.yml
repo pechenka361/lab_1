@@ -25,7 +25,7 @@ install:
   # Переход в директорию flaskapp и установка зависимостей
   - cd flaskapp
   - python3.11 -m pip install --upgrade pip  # Обновление pip
-  - python3 -m pip install -r requirements.txt
+  - python3.11 -m pip install -r requirements.txt
 
 # Сборка Docker-образа
 build_script:
