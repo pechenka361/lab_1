@@ -1,0 +1,12 @@
+{
+    "build": {
+      "builder": "custom",
+      "buildCommand": "docker-compose build"
+    },
+    "deploy": {
+      "startCommand": "docker-compose up --build",
+      "healthcheckPath": "/",
+      "healthcheckTimeout": 100,
+      "restartPolicyType": "always"
+    }
+  }
