@@ -7,26 +7,6 @@ environment:
   DOCKER_USERNAME: pechenka1
   PROJECT_NAME: "lab_1"  # Название вашего проекта на Railway
 
-# Установка зависимостей
-install:
-  - sudo apt update && sudo apt install -y curl  # Обновление пакетов и установка curl
-  - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -  # Установка Node.js
-  - sudo apt install -y nodejs  # Установка Node.js
-  - npm install -g @railway/cli  # Установка Railway CLI
-
-  # Установка Python 3.11
-  - sudo apt install -y software-properties-common  # Установка утилит для добавления репозиториев
-  - sudo add-apt-repository -y ppa:deadsnakes/ppa  # Добавление PPA с Python 3.11
-  - sudo apt update  # Обновление списка пакетов
-  - sudo apt install -y python3.11 python3.11-venv python3.11-distutils  # Установка Python 3.11
-  - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py  # Скачивание get-pip.py
-  - python3.11 get-pip.py  # Установка pip для Python 3.11
-
-  # Переход в директорию flaskapp и установка зависимостей
-  - cd flaskapp
-  - python3.11 -m pip install --upgrade pip  # Обновление pip
-  - python3.11 -m pip install -r requirements.txt
-
 # Сборка Docker-образа
 build_script:
   - docker build -t lab_1 .  # Сборка Docker-образа
