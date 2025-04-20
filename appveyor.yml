@@ -35,8 +35,6 @@ build_script:
 deploy_script:
   - echo "Setting RAILWAY_TOKEN..."  # Отладка
   - export RAILWAY_TOKEN=$RAILWAY_TOKEN
-  - echo "Logging into Railway..."  # Отладка
-  - railway login || true
   - echo "Checking Railway user..."  # Отладка
   - railway whoami
   - echo "Initializing Railway project..."  # Отладка
