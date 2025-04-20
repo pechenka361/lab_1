@@ -9,7 +9,6 @@ environment:
 
 # Сборка Docker-образа
 build_script:
-  - cd flaskapp
   - docker build -t lab_1 .  # Сборка Docker-образа
 
 # Деплой на Railway
