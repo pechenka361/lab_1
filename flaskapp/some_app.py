@@ -241,4 +241,5 @@ def image_resize():
     )
 
 if __name__ == "__main__":
+    print("start")
     app.run(host="127.0.0.1", port=5000)
