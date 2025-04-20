@@ -33,6 +33,13 @@ build_script:
 
 # Деплой на Railway
 deploy_script:
-  - export RAILWAY_TOKEN=$RAILWAY_TOKEN  # Установка переменной окружения
-  - railway init --name $PROJECT_NAME  # Инициализация проекта
-  - railway up  # Деплой приложения
+  - echo "Setting RAILWAY_TOKEN..."  # Отладка
+  - export RAILWAY_TOKEN=$RAILWAY_TOKEN
+  - echo "Logging into Railway..."  # Отладка
+  - railway login || true
+  - echo "Checking Railway user..."  # Отладка
+  - railway whoami
+  - echo "Initializing Railway project..."  # Отладка
+  - railway init --name $PROJECT_NAME
+  - echo "Deploying to Railway..."  # Отладка
+  - railway up
