@@ -1,0 +1,27 @@
+# Настройки среды
+image: ubuntu2204  # Используемый образ (Ubuntu 22.04)
+
+# Переменные окружения
+environment:
+  RAILWAY_TOKEN:
+    secure: 4c30ab64-25b7-4f3d-b036-52e808a7c415  # Зашифрованный токен Railway
+  PROJECT_NAME: "lab_1"  # Название вашего проекта на Railway
+
+# Установка зависимостей
+install:
+  - sudo apt update && sudo apt install -y curl  # Обновление пакетов и установка curl
+  - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -  # Установка Node.js
+  - sudo apt install -y nodejs  # Установка Node.js
+  - npm install -g @railway/cli  # Установка Railway CLI
+  - python3 -m pip install --upgrade pip  # Обновление pip
+  - pip3 install -r requirements.txt  # Установка зависимостей Python
+
+# Сборка Docker-образа
+build_script:
+  - docker build -t your-docker-image-name .  # Сборка Docker-образа
+
+# Деплой на Railway
+deploy_script:
+  - railway login --token $RAILWAY_TOKEN  # Логин в Railway
+  - railway init --name $PROJECT_NAME  # Инициализация проекта
+  - railway up  # Деплой приложения
