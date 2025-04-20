@@ -1,0 +1,19 @@
+# Настройки среды
+image: ubuntu2204  # Используемый образ (Ubuntu 22.04)
+
+# Переменные окружения
+environment:
+  DOCKER_PASSWORD: 240304Kmd_
+  DOCKER_USERNAME: pechenka1
+  PROJECT_NAME: "lab_1"  # Название вашего проекта на Railway
+
+# Сборка Docker-образа
+build_script:
+  - cd flaskapp
+  - docker build -t lab_1 .  # Сборка Docker-образа
+
+# Деплой на Railway
+deploy_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag lab_1 $DOCKER_USERNAME/lab_1:latest
+  - docker push $DOCKER_USERNAME/lab_1:latest
