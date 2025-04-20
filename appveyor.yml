@@ -29,10 +29,10 @@ install:
 
 # Сборка Docker-образа
 build_script:
-  - docker build -t your-docker-image-name .  # Сборка Docker-образа
+  - docker build -t lab_1 .  # Сборка Docker-образа
 
 # Деплой на Railway
 deploy_script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker tag your-docker-image-name $DOCKER_USERNAME/your-docker-image-name:latest
-  - docker push $DOCKER_USERNAME/your-docker-image-name:latest
+  - docker tag lab_1 $DOCKER_USERNAME/lab_1:latest
+  - docker push $DOCKER_USERNAME/lab_1:latest
