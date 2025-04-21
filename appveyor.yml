@@ -14,7 +14,7 @@ build_script:
 # Деплой на Railway
 test_script:
   - sleep 5  # Даем время для запуска контейнера и приложения внутри него
-  - python3 flaskapp/client.py  # Выполняем тесты из файла test_api.py
+  - python3 ./flaskapp/client.py  # Выполняем тесты из файла test_api.py
 
 on_finish:
   - docker compose -f docker_compose.yml down  # Остановка и удаление контейнера
