@@ -15,6 +15,6 @@ build_script:
 test_script:
   - sleep 5  # Даем время для запуска контейнера и приложения внутри него
   - python3 flaskapp/client.py  # Выполняем тесты из файла test_api.py
-  
-cleanup_script:
+
+on_finish:
   - docker compose -f docker_compose.yml down  # Остановка и удаление контейнера
