@@ -2,7 +2,7 @@ services:
   api:
     restart: always
     build:
-      context: "./flaskapp"
+      context: "."
     volumes:
       - ./static:/code/static
       - /etc/timezone:/etc/timezone:ro
