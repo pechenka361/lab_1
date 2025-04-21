@@ -9,10 +9,12 @@ environment:
 
 # Сборка Docker-образа
 build_script:
-  - docker build -t lab_1 -f flaskapp/Dockerfile .  # Сборка Docker-образа
+  - docker compose -f docker_compose.yml up --build -d   # Сборка Docker-образа
 
 # Деплой на Railway
-deploy_script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker tag lab_1 $DOCKER_USERNAME/lab_1:latest
-  - docker push $DOCKER_USERNAME/lab_1:latest
+test_script:
+  - sleep 5  # Даем время для запуска контейнера и приложения внутри него
+  - python3 flaskapp/client.py  # Выполняем тесты из файла test_api.py
+  
+cleanup_script:
+  - docker compose -f docker_compose.yml down  # Остановка и удаление контейнера
