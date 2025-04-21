@@ -16,12 +16,12 @@ def plot_color_images(image_path, output_path):
     plt.xlim([0, 256])
 
     plt.subplot(1, 3, 2)
-    plt.hist(r.ravel(), bins=256, color='green')
+    plt.hist(g.ravel(), bins=256, color='green')
     plt.title('Green chanel')
     plt.xlim([0, 256])
 
     plt.subplot(1, 3, 3)
-    plt.hist(r.ravel(), bins=256, color='blue')
+    plt.hist(b.ravel(), bins=256, color='blue')
     plt.title('Blue chanel')
     plt.xlim([0, 256])
     
