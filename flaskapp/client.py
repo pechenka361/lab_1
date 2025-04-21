@@ -3,7 +3,7 @@ import os
 import base64
 
 img_data = None
-path = os.path.join("./static", "image0008.png")
+path = os.path.join("flaskapp/static", "image0008.png")
 
 with open(path, "rb") as fh:
     img_data = fh.read()
