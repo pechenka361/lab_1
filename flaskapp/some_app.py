@@ -32,6 +32,9 @@ app.config["RECAPTCHA_PUBLIC_KEY"] = "6LdEcBYrAAAAAH3o_kMpRMuSeJD5pvMUVGJ6ojw7"
 app.config["RECAPTCHA_PRIVATE_KEY"] = "6LdEcBYrAAAAAC97LUi7cPMPV8v4EUo7N-78QQBA"
 app.config["RECAPTCHA_OPTIONS"] = {"theme": "white"}
 
+@app.route("/hello_world")
+def hello():
+    return " <html><head></head> <body> Hello World! </body></html>"
 
 # Маршрут для передачи данных в шаблон
 @app.route("/data_to")
