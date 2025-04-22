@@ -3,7 +3,6 @@ from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Optional, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 import base64
@@ -13,14 +12,10 @@ import json
 import lxml.etree as ET
 
 # Импортируем пользовательские модули для работы с нейросетью и изображениями
-import net as neuronet
 import image_operation
 
 # Создаем экземпляр Flask-приложения
 app = Flask(__name__)
-
-# Инициализируем Bootstrap для использования в шаблонах
-bootstrap = Bootstrap(app)
 
 # Устанавливаем секретный ключ для защиты сессий и CSRF
 SECRET_KEY = "d090728025bb514707d794d4d2aeffd9"
@@ -72,87 +67,6 @@ def download_file(filename):
         path=filename,
         as_attachment=True  # Файл будет скачиваться, а не отображаться в браузере
     )
-
-# Форма для загрузки изображения и проверки через reCAPTCHA
-class NetForm(FlaskForm):
-    openid = StringField("openid", validators=[DataRequired()])  # Поле для ввода текста (обязательное)
-    upload = FileField(
-        "Load image",  # Поле для загрузки файла
-        validators=[
-            FileRequired(),  # Файл обязателен
-            FileAllowed(["jpg", "png", "jpeg"], "Image only!")  # Разрешены только изображения
-        ],
-    )
-    recaptcha = RecaptchaField()  # Поле reCAPTCHA для защиты от ботов
-    submit = SubmitField("send")  # Кнопка отправки формы
-
-# Маршрут для работы с нейросетью
-@app.route("/net", methods=["GET", "POST"])
-def net():
-    form = NetForm()  # Создаем экземпляр формы
-    filename = None  # Переменная для имени файла
-    neurodic = {}  # Словарь для хранения результатов работы нейросети
-
-    # Если форма отправлена и прошла валидацию
-    if form.validate_on_submit():
-        # Сохраняем загруженный файл
-        filename = os.path.join("./static", secure_filename(form.upload.data.filename))
-        
-        # Читаем изображение и получаем результаты от нейросети
-        fcount, fimage = neuronet.read_image_file(10, "./static")
-        decode = neuronet.getresult(fimage)
-
-        # Заполняем словарь результатами работы нейросети
-        for elem in decode:
-            neurodic[elem[0][1]] = elem[0][2]
-
-        # Сохраняем загруженный файл
-        form.upload.data.save(filename)
-
-    # Передаем данные в шаблон net.html
-    return render_template(
-        "net.html", 
-        form=form, 
-        image_name=filename, 
-        neurodic=neurodic
-    )
-
-# API для работы с нейросетью через JSON
-@app.route("/apinet", methods=["GET", "POST"])
-def apinet():
-    neurodic = {}  # Словарь для хранения результатов работы нейросети
-
-    # Проверяем, что запрос содержит данные в формате JSON
-    if request.mimetype == "application/json":
-        data = request.get_json()  # Получаем данные из запроса
-
-        # Декодируем изображение из Base64
-        filebytes = data["imagebin"].encode("utf-8")
-        cfile = base64.b64decode(filebytes)
-        img = Image.open(BytesIO(cfile))  # Открываем изображение с помощью PIL
-
-        # Получаем результаты от нейросети
-        decode = neuronet.getresult([img])
-        for elem in decode:
-            neurodic[elem[0][1]] = str(elem[0][2])  # Заполняем словарь результатами
-
-        # Преобразуем результаты в JSON и возвращаем ответ
-        ret = json.dumps(neurodic)
-        resp = Response(response=ret, status=200, mimetype="application/json")
-        return resp
-
-# API для преобразования XML в HTML с использованием XSLT
-@app.route("/apixml", methods=['GET', 'POST'])
-def apixml():
-    # Парсим XML и XSLT файлы
-    dom = ET.parse("./static/xml/file.xml")  # Исходный XML
-    xslt = ET.parse("./static/xml/file.xslt")  # XSLT для преобразования
-    transform = ET.XSLT(xslt)  # Создаем объект трансформации
-    newhtml = transform(dom)  # Применяем трансформацию
-
-    # Преобразуем результат в строку и возвращаем его
-    strfile = ET.tostring(newhtml)
-    return strfile
 
 # Форма для изменения размера изображения
 class ResizeForm(FlaskForm):
