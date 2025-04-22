@@ -2,38 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Указываем кодировку UTF-8 для корректного отображения символов -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Настройка адаптивности страницы для мобильных устройств -->
     <title>Загрузка и изменение изображения</title>
+    <!-- Заголовок страницы -->
     <style>
-        .error { color: red; }
-        .success { color: green; }
-        .warning { color: orange; }
+        /* Стили для отображения сообщений */
+        .error { color: red; } /* Сообщения об ошибках будут красными */
+        .success { color: green; } /* Сообщения об успехе будут зелеными */
+        .warning { color: orange; } /* Предупреждения будут оранжевыми */
+
+        /* Ограничение размера изображений */
         img { max-width: 500px; margin-top: 10px; }
+
+        /* Класс для скрытия элементов */
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <h1>Загрузите и измените изображение</h1>
+    <!-- Заголовок страницы -->
 
-    <!-- Отображение сообщений flash -->
+    <!-- Отображение flash-сообщений (уведомлений) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
                 {% for category, message in messages %}
+                    <!-- Каждое сообщение отображается с соответствующим классом (error, success, warning) -->
                     <li class="{{ category }}">{{ message }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
     {% endwith %}
 
-    <!-- Форма загрузки -->
+    <!-- Форма загрузки изображения -->
     <form method="POST" enctype="multipart/form-data" id="resize-form">
         {{ form.hidden_tag() }}
+        <!-- Скрытые поля формы для защиты CSRF -->
+
         <div>
             {{ form.upload.label }}<br>
             {{ form.upload }}
+            <!-- Поле для загрузки файла -->
             {% for error in form.upload.errors %}
                 <span class="error">{{ error }}</span><br>
+                <!-- Отображение ошибок, связанных с полем загрузки -->
             {% endfor %}
         </div>
 
@@ -41,82 +55,101 @@
             <label>Выберите режим изменения размера:</label><br>
             <input type="radio" name="resize_mode" value="percent" id="mode-percent" checked> Проценты
             <input type="radio" name="resize_mode" value="pixels" id="mode-pixels"> Пиксели
+            <!-- Переключатели для выбора режима изменения размера -->
         </div>
 
         <div id="percent-fields" class="resize-fields">
             {{ form.percent.label }}<br>
             {{ form.percent }}
+            <!-- Поле для ввода процента изменения размера -->
             {% for error in form.percent.errors %}
                 <span class="error">{{ error }}</span><br>
+                <!-- Отображение ошибок, связанных с полем процентов -->
             {% endfor %}
         </div>
 
         <div id="pixel-fields" class="resize-fields hidden">
             {{ form.width.label }}<br>
             {{ form.width }}
+            <!-- Поле для ввода новой ширины -->
             {% for error in form.width.errors %}
                 <span class="error">{{ error }}</span><br>
+                <!-- Отображение ошибок, связанных с полем ширины -->
             {% endfor %}
 
             {{ form.height.label }}<br>
             {{ form.height }}
+            <!-- Поле для ввода новой высоты -->
             {% for error in form.height.errors %}
                 <span class="error">{{ error }}</span><br>
+                <!-- Отображение ошибок, связанных с полем высоты -->
             {% endfor %}
 
             <label>
                 <input type="checkbox" name="keep_aspect_ratio" id="keep-aspect-ratio"> Сохранить пропорции
+                <!-- Чекбокс для сохранения пропорций при изменении размера -->
             </label>
         </div>
 
         <button type="submit">Загрузить</button>
+        <!-- Кнопка отправки формы -->
     </form>
 
     <!-- Отображение оригинального изображения -->
     {% if original_image %}
     <h2>Оригинальное изображение:</h2>
     <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
+    <!-- Отображение загруженного изображения -->
     <br>
     <a href="{{ url_for('download_file', filename=original_image) }}" class="btn">Скачать оригинал</a>
+    <!-- Ссылка для скачивания оригинального изображения -->
     {% endif %}
 
     <!-- Отображение измененного изображения -->
     {% if resized_image %}
     <h2>Измененное изображение:</h2>
     <img src="{{ url_for('static', filename=resized_image) }}" alt="Resized Image">
+    <!-- Отображение измененного изображения -->
     <br>
     <a href="{{ url_for('download_file', filename=resized_image) }}" class="btn">Скачать измененное изображение</a>
+    <!-- Ссылка для скачивания измененного изображения -->
     {% endif %}
 
     <!-- Отображение гистограммы исходного изображения -->
     {% if original_histogram %}
     <h2>Гистограмма распределения цветов (исходное изображение):</h2>
     <img src="{{ url_for('static', filename=original_histogram) }}" alt="Original Histogram">
+    <!-- График распределения цветов для оригинального изображения -->
     <br>
     <a href="{{ url_for('download_file', filename=original_histogram) }}" class="btn">Скачать гистограмму</a>
+    <!-- Ссылка для скачивания гистограммы -->
     {% endif %}
 
     <!-- Отображение гистограммы измененного изображения -->
     {% if resized_histogram %}
     <h2>Гистограмма распределения цветов (измененное изображение):</h2>
     <img src="{{ url_for('static', filename=resized_histogram) }}" alt="Resized Histogram">
+    <!-- График распределения цветов для измененного изображения -->
     <br>
     <a href="{{ url_for('download_file', filename=resized_histogram) }}" class="btn">Скачать гистограмму</a>
+    <!-- Ссылка для скачивания гистограммы -->
     {% endif %}
 
     <script>
-        // Переключение между режимами
+        // Переключение между режимами изменения размера
         const modePercent = document.getElementById("mode-percent");
         const modePixels = document.getElementById("mode-pixels");
         const percentFields = document.getElementById("percent-fields");
         const pixelFields = document.getElementById("pixel-fields");
 
         modePercent.addEventListener("change", () => {
+            // Если выбран режим "Проценты", показываем поля для ввода процента
             percentFields.classList.remove("hidden");
             pixelFields.classList.add("hidden");
         });
 
         modePixels.addEventListener("change", () => {
+            // Если выбран режим "Пиксели", показываем поля для ввода ширины и высоты
             percentFields.classList.add("hidden");
             pixelFields.classList.remove("hidden");
         });
@@ -128,8 +161,10 @@
 
         keepAspectRatio.addEventListener("change", () => {
             if (keepAspectRatio.checked) {
+                // Если чекбокс "Сохранить пропорции" активен, блокируем поле высоты
                 heightField.disabled = true;
             } else {
+                // Если чекбокс неактивен, разблокируем поле высоты
                 heightField.disabled = false;
             }
         });
